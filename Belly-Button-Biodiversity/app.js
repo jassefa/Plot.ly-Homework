@@ -64,26 +64,31 @@ function buildDemo(current_id) {
 //create fucntion to build plot 
 function buildPlot(current_id) {
     d3.json("data/samples.json").then((sampleData) => {
-//    // Select the input value
-    // var sampleValues = sampleData.samples.sample_values;
+
     var filterSample = sampleData.samples;
     console.log(filterSample)
     var filteredSample= filterSample.filter(element => parseInt(element.id) === parseInt(current_id))
     console.log(filteredSample)
-    // var sampleValues = filteredSample.map(row => row.sample_values);
-    // console.log(sampleValues)
+    //Bar Chart
     var sampleValues = filteredSample[0]
     console.log(sampleValues)
     var TopSampleValues = sampleValues.sample_values.slice(0,10).reverse();
     console.log(TopSampleValues)
     var TopTenOtu = sampleValues.otu_ids.map(id=>`OTUid ${id}`).slice(0,10).reverse()
     console.log(TopTenOtu)
-    var TopTenOtuBubble = sampleValues.otu_ids.map(id=>id).slice(0,10).reverse()
     var topTenOtuLables = sampleValues.otu_labels.slice(0,10).reverse();
     console.log(topTenOtuLables)  
 
+    //Bubble chart
+    var sampleBubble = sampleValues.sample_values
+    console.log(sampleBubble)
+    var OtuBubble = sampleValues.otu_ids
+    console.log(OtuBubble)
+    var otuLablesBubble = sampleValues.otu_labels
+    console.log(otuLablesBubble) 
+
  // Trace1 
- var trace1 = {
+    var trace1 = {
     x: TopSampleValues,
     y: TopTenOtu,
     text:topTenOtuLables,
@@ -93,10 +98,10 @@ function buildPlot(current_id) {
   };
 
   // data
-  var chartData = [trace1];
+    var chartData = [trace1];
 
   // Apply the group bar mode to the layout
-  var layout = {
+    var layout = {
     title: "Belly Botton Biodiversity",
     margin: {
       l: 100,
@@ -105,26 +110,29 @@ function buildPlot(current_id) {
       b: 50
         }
   }
-
-var trace2 = {
-    x: TopTenOtuBubble,
-    y: TopSampleValues,
-    mode: 'markers',
-    marker: {
-        color:TopTenOtuBubble,
-        size:TopSampleValues
-    }
-  };
-  
-  var data = [trace2];
-  
-  var layout = {
-    title: 'Marker Size',
-    showlegend: false,
-  };
-  
     // Render the plot to the div tag with id "plot"
     Plotly.newPlot("bar", chartData, layout);  
+
+    //bubble chart
+    var trace2 = {
+        x: OtuBubble,
+        y: sampleBubble,
+        mode: "markers",
+        text:otuLablesBubble,
+        marker: {
+            color:OtuBubble,
+            size:sampleBubble,
+            sizeref:1.02
+        }
+      };
+      
+      var data = [trace2];
+      
+      var layout = {
+        title: 'Belly Botton Biodiversity Bubble Graph',
+        showlegend: false,
+      };
+      
     Plotly.newPlot("bubble", data, layout);
 })
 };
