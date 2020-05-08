@@ -24,6 +24,8 @@ d3.json("data/samples.json").then((sampleData) => {
         dropdownMenu.append("option")
         .property("value",element)
         .text(element))
+    buildPlot(940)
+    buildDemo(940)
 });
 }
 init();
@@ -66,7 +68,7 @@ function buildPlot(current_id) {
     // var sampleValues = sampleData.samples.sample_values;
     var filterSample = sampleData.samples;
     console.log(filterSample)
-    var filteredSample= filterSample.filter(element => element.id === current_id)
+    var filteredSample= filterSample.filter(element => parseInt(element.id) === parseInt(current_id))
     console.log(filteredSample)
     // var sampleValues = filteredSample.map(row => row.sample_values);
     // console.log(sampleValues)
@@ -76,6 +78,7 @@ function buildPlot(current_id) {
     console.log(TopSampleValues)
     var TopTenOtu = sampleValues.otu_ids.map(id=>`OTUid ${id}`).slice(0,10).reverse()
     console.log(TopTenOtu)
+    var TopTenOtuBubble = sampleValues.otu_ids.map(id=>id).slice(0,10).reverse()
     var topTenOtuLables = sampleValues.otu_labels.slice(0,10).reverse();
     console.log(topTenOtuLables)  
 
@@ -104,11 +107,11 @@ function buildPlot(current_id) {
   }
 
 var trace2 = {
-    x: TopTenOtu,
+    x: TopTenOtuBubble,
     y: TopSampleValues,
     mode: 'markers',
     marker: {
-        color:TopTenOtu
+        color:TopTenOtuBubble,
         size:TopSampleValues
     }
   };
@@ -118,8 +121,6 @@ var trace2 = {
   var layout = {
     title: 'Marker Size',
     showlegend: false,
-    height: 600,
-    width: 600
   };
   
     // Render the plot to the div tag with id "plot"
